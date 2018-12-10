@@ -1,6 +1,5 @@
 class Authy
   attr_reader :environment, :merchants, :cards
-  attr_reader :merchants
 
   # Takes an environment file string which includes
   # ENVIRONMENT, DEFAULT_CARD_LIMIT, DEFAULT_VELOCITY_LIMIT,
