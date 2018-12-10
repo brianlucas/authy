@@ -1,6 +1,7 @@
 *.db
 *.gem
 *.rbc
+.byebug_history
 /.config
 /coverage/
 /InstalledFiles

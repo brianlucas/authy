@@ -1,18 +1,17 @@
 require_relative "../lib/authy"
 require "fileutils"
 
-ENV_FILE = ENV["ENV_FILE"] || "test.env"
-
 RSpec.describe Authy do
   before(:all) do
+    ENVIRONMENT = ENV["ENVIRONMENT"] || "test"
     # First, remove the database if necessary
     if ENV["RECREATE_DATABASE"]
-      authorize = Authy.new(env_file: ENV_FILE)
+      authorize = Authy.new(env: ENVIRONMENT)
       authorize.drop_db
       authorize.setup_db
     end
     # Next, instantiate new instance of auth class
-    @authorize = Authy.new(env_file: ENV_FILE)
+    @authorize = Authy.new(env: ENVIRONMENT)
   end
 
   context "Configuration" do
@@ -20,6 +19,10 @@ RSpec.describe Authy do
       expect(@authorize).to be_an_instance_of(Authy)
       expect(@authorize.environment).to eq("test")
       expect(ENV["DEFAULT_CARD_LIMIT"].to_i).not_to eq(0)
+    end
+    it "should raise an error instance with the wrong environment" do
+      wrong =
+        expect { Authy.new(env: "wrong_env") }.to raise_error(RuntimeError)
     end
   end
 
@@ -71,9 +74,9 @@ RSpec.describe Authy do
 
   context "Stress testing" do
     before(:all) do
-      env_file = "test.env"
+      ENVIRONMENT = "test"
       # Instantiate new instance of auth class
-      @concurrent = Authy.new(env_file: env_file)
+      @concurrent = Authy.new(env: ENVIRONMENT)
       @merchant_name = @concurrent.merchants.first[:name]
       @limit = 2500000
       @token = "ABCD"

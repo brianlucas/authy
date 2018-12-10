@@ -1,14 +1,16 @@
 class Authy
-  attr_reader :environment, :merchants, :cards
+  attr_reader :environment
+  attr_reader :merchants
+  attr_reader :cards
 
   # Takes an environment file string which includes
   # ENVIRONMENT, DEFAULT_CARD_LIMIT, DEFAULT_VELOCITY_LIMIT,
   # and LOG_LEVEL
-  def initialize(env_file: "default.env")
+  def initialize(env: "default")
     extend Authy::Database # ORM fns
     extend Authy::Admin # Card, Merchant fns
 
-    @environment = _env(env_file)
+    @environment = _env(env)
     @logger = _logger(ENV["LOG_LEVEL"])
 
     @database = connect_database
@@ -76,8 +78,10 @@ class Authy
 
   # Load an env_file and inject into environment
   # via ENV['value']
-  def _env(env_file)
-    result = Dotenv.load(env_file)
+  def _env(env)
+    result = Dotenv.load(".env.#{env}")
+    raise "Environment #{env} not found" unless
+      ENV["ENVIRONMENT"] && !result.empty?
     environment = ENV["ENVIRONMENT"]
     return environment
   end

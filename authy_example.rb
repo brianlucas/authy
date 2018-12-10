@@ -1,14 +1,12 @@
 require_relative "lib/authy"
 
-ENV_FILE = "default.env"
-
 # First, drop and recreate the database
-db = Authy.new(env_file: ENV_FILE)
+db = Authy.new
 db.drop_db
 db.setup_db
 
 # Next, create an instance to use
-authy = Authy.new(env_file: ENV_FILE)
+authy = Authy.new
 
 merchant_name = authy.create_merchant(name: "Acme Corp").get(:name)
 card = authy.issue_card

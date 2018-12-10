@@ -41,10 +41,10 @@ Use `bundle info [gemname]` to see where a bundled gem is installed.
 4. Try running the example file (`ruby authy_example.rb`) for a quick primer.
 
 #### Database
-Authy uses Sequel for database functions. 
+Authy uses [Sequel](https://github.com/jeremyevans/sequel) for database functions. 
 
 ```
-authorize = Authy.new(env_file: ENV_FILE)
+authorize = Authy.new(env: 'default')
 authorize.drop_db
 authorize.setup_db
 ```
@@ -55,10 +55,36 @@ You can easily populate a test database by running:
 RECREATE_DATABASE=true rspec
 ```
 
+
+```
+authorize = Authy.new(env: 'default')
+authorize.drop_db
+authorize.setup_db
+```
+
+You can easily populate a test database by running:
+
+```
+RECREATE_DATABASE=true rspec
+```
+
+#### Environments
+
+Authy uses [Dotenv](https://github.com/bkeepers/dotenv) for sane environment configuration defaults. 
+Example:
+```
+# .env.test
+ENVIRONMENT=test
+DEFAULT_CARD_LIMIT=20000
+DEFAULT_VELOCITY_LIMIT=1000
+LOG_LEVEL=DEBUG
+```
+
+
 ## Usage
 
 ```
-auth = Authy.new(env_file: 'default.env')
+auth = Authy.new(env: 'default')
 success = authy.authorize(<token>, <amount>, <merchant name>)
 if success
   puts "Authorization succeeded"
