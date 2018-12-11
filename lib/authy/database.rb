@@ -74,10 +74,11 @@ class Authy
           @database.transaction do
             yield
           end
-          locks.where(id: id).delete
           break
         rescue Sequel::UniqueConstraintViolation
           sleep(0.1)
+        ensure
+          locks.where(id: id).delete
         end
       end
     end
